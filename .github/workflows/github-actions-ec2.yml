@@ -18,7 +18,7 @@ jobs:
       - name: connect to ec2 instance
         run: |
           echo ${{ secrets.SSH_PRIVATE_KEY }} > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@$ec2-3-90-166-99.compute-1.amazonaws.com
+          ssh -i "private_key" ubuntu@ec2-3-90-166-99.compute-1.amazonaws.com
           # Now we have got the access of EC2 and we will start the deploy .
           cd /home/
           ls
