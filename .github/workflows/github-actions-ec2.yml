@@ -1,38 +1,17 @@
-name: Push-to-EC2
+name: resume-upload-action
 
-# Trigger deployment only on push to main branch
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+permissions:
+  packages: write
 
 jobs:
-  deploy:
-    name: Deploy to EC2 on master branch push
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout the files
-        uses: actions/checkout@v2
-
-      - name: Deploy to Server 1
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          REMOTE_HOST: ec2-3-90-166-99.compute-1.amazonaws.com
-          REMOTE_USER: ubuntu
-          TARGET: home
-
-      - name: Executing remote ssh commands using ssh key
-        uses: appleboy/ssh-action@master
-        with:
-          host: ec2-3-90-166-99.compute-1.amazonaws.com
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo apt-get -y update
-            sudo apt-get install -y apache2
-            sudo systemctl start apache2
-            sudo systemctl enable apache2
-            cd home
-            sudo mv * /var/www/html
+    deploy:
+      runs-on: ubuntu-latest
+      name: resume-push
+      steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
